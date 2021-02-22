@@ -196,7 +196,7 @@
 		</view>
 		<!-- 属性规格 -->
 		<view class="goods-discounts">
-			<view class="list" @click="sku_key = true">
+			<view class="list" @click="showSku">
 				<view class="title">已选</view>
 				<view class="content">
 					<text>蓝色,2件</text>
@@ -315,10 +315,10 @@
 				</view>
 			</view>
 			<view class="footer-buy">
-				<view class="cart-add" @click="$refs['GoodsAttr'].show(2)">
+				<view class="cart-add" @click="showSku">
 					<text>加入购物车</text>
 				</view>
-				<view class="buy-at" @click="$refs['GoodsAttr'].show(3)">
+				<view class="buy-at" @click="showSku">
 					<text>立即购买</text>
 				</view>
 			</view>
@@ -329,43 +329,41 @@
 		<goods-coupon ref="GoodsCoupon"></goods-coupon>
 		<!-- 属性规格 -->
 		<goods-attr ref="GoodsAttr"></goods-attr>
-		
-		<vk-data-goods-sku-popup
-			ref="skuPopup"
-			v-model="sku_key" 
+
+		<vk-data-goods-sku-popup 
+			ref="skuPopup" 
+			v-model="skuKey" 
 			border-radius="20" 
-			:custom-action="findGoodsInfo"
+			:custom-action="findGoodsInfo" 
 			:mode="form.skuMode"
-			:buy-now-text="form.buyNowText"
-			:add-cart-text="form.addCartText"
-			:no-stock-text="form.noStockText"
+			:buy-now-text="form.buyNowText" 
+			:add-cart-text="form.addCartText" 
+			:no-stock-text="form.noStockText" 
 			:min-buy-num="form.minBuyNum"
-			:max-buy-num="form.maxBuyNum"
-			:step-buy-num="form.stepBuyNum"
-			:stepStrictly="form.stepStrictly"
+			:max-buy-num="form.maxBuyNum" 
+			:step-buy-num="form.stepBuyNum" 
+			:stepStrictly="form.stepStrictly" 
 			:show-close="form.showClose"
-			:mask-close-able="form.maskCloseAble"
-			:hide-stock="form.hideStock"
-			:theme="form.theme"
-		></vk-data-goods-sku-popup>
+			:mask-close-able="form.maskCloseAble" 
+			:hide-stock="form.hideStock" 
+			:theme="form.theme">
+		</vk-data-goods-sku-popup>
 	</view>
 </template>
 
 <script>
 	import GoodsServe from '../../components/GoodsServe/GoodsServe.vue';
 	import GoodsCoupon from '../../components/GoodsCoupon/GoodsCoupon.vue';
-	import GoodsAttr from '../../components/GoodsAttr/GoodsAttr.vue';
 
 	export default {
 		components: {
 			GoodsServe,
 			GoodsCoupon,
-			GoodsAttr,
 		},
 		data() {
 			return {
-				goods_id: "001",
-				sku_key: false,
+				goodsId: "001",
+				skuKey: false,
 				form: {
 					skuMode: 1,
 					buyNowText: "立即购买",
@@ -576,19 +574,25 @@
 		},
 		methods: {
 			/**
+			 * 打开规格选择器
+			 */
+			showSku(){
+				this.skuKey = true;
+			},
+			/**
 			 * 获取商品信息
 			 * 这里可以看到每次打开SKU都会去重新请求商品信息,为的是每次打开SKU组件可以实时看到剩余库存
 			 */
-			findGoodsInfo(obj){
-				return this.getListItem(this.goodsDB, "_id",this.goods_id)
+			findGoodsInfo(obj) {
+				return this.getListItem(this.goodsDB, "_id", this.goodsId)
 			},
 			/**
 			 * 获取对象数组中的某一个item,根据指定的键值
 			 */
-			getListItem (list, key, value) {
+			getListItem(list, key, value) {
 				let item;
-				for(let i in list){
-					if(list[i][key] === value){
+				for (let i in list) {
+					if (list[i][key] === value) {
 						item = list[i];
 						break;
 					}
